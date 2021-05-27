@@ -1,6 +1,6 @@
 import os
 import shutil
-from PyPDF2 import PdfFileMerger, PdfFileReader
+from PyPDF2 import PdfFileMerger
 
 root_directory = r'C:\Users\chunt\OneDrive\Desktop\Electron Tutorial\files'
 
@@ -9,6 +9,8 @@ endsWith = lambda file_name, ext: os.path.splitext(file_name)[1] == ext
 
 
 def combinePdfFiles(entry: os.DirEntry, index: int):
+
+    print(f'Combining {entry.name}...')
 
     merger = PdfFileMerger()
     root_entry_path = entry.path
@@ -29,7 +31,6 @@ def combinePdfFiles(entry: os.DirEntry, index: int):
 
     for item in merge_list:
         merger.append(item.path)
-        print(item.name)
         
     
     merger.write(os.path.join(root_entry_path, f'{order_summary}.pdf'))
@@ -49,11 +50,13 @@ def combinePdfFiles(entry: os.DirEntry, index: int):
 def execute_on_directory(root_directoy: str) -> None:
     sub_directories = [entry for entry in os.scandir(root_directory) if entry.is_dir()]
 
-    for index, directory in enumerate(sub_directories):
+    for index, sub_directory in enumerate(sub_directories):
         try:
-            combinePdfFiles(directory, index)
+            combinePdfFiles(sub_directory, index)
         except Exception as err:
             print(err)
+    
+    print('Finished...')
         
 
 
